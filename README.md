@@ -1,13 +1,7 @@
 ### KeepTheBoxGreen device implementation
 
-
-### Guides:
-
-Connecting to wifi  - <a href="https://www.arduino.cc/en/Guide/MKRWiFi1010/connecting-to-wifi-network">link</a>
-
-Explanation of necessary drivers for the Arduino MKR1000 series of boards - <a href="https://www.arduino.cc/en/Guide/MKR1000">link</a>
-
-### To connect to wifi
+The board uses Azure cloud IOT hub for storing messages.
+### For local development:
 
 1. Create a header file within Main folder
 ```
@@ -20,3 +14,10 @@ touch arduino_secrets.h
 #define SECRET_BROKER    ""
 #define SECRET_DEVICE_ID ""
 ```
+
+### Guides:
+
+Connecting to wifi  - <a href="https://www.arduino.cc/en/Guide/MKRWiFi1010/connecting-to-wifi-network">link</a>
+
+Explanation of necessary drivers for the Arduino MKR1000 series of boards - <a href="https://www.arduino.cc/en/Guide/MKR1000">link</a>
+
