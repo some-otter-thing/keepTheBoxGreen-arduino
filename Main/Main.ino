@@ -1,60 +1,158 @@
-
+#include <ArduinoBearSSL.h>
+#include <ArduinoECCX08.h>
+#include <utility/ECCX08SelfSignedCert.h>
+#include <ArduinoMqttClient.h>
 #include <WiFiNINA.h>
-
 #include "arduino_secrets.h"
 
-char ssid[] = SECRET_SSID;   // your network SSID (name)
-char pass[] = SECRET_PASS;   // your network password (use for WPA, or use as key for WEP)
-int status = WL_IDLE_STATUS; // the Wifi radio's status
+const char ssid[] = SECRET_SSID;
+const char pass[] = SECRET_PASS;
+const char broker[] = SECRET_BROKER;
+String deviceId = SECRET_DEVICE_ID;
+
+WiFiClient wifiClient;               // Used for the TCP socket connection
+BearSSLClient sslClient(wifiClient); // Used for SSL/TLS connection, integrates with ECC508
+MqttClient mqttClient(sslClient);
+
+unsigned long lastMillis = 0;
 
 void setup()
 {
-  //Initialize serial and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(9600); //Initialize serial and wait for port to open:
   while (!Serial);
 
-  // attempt to connect to Wifi network:
-  while (status != WL_CONNECTED)
+  if (!ECCX08.begin())
   {
-    Serial.print("Attempting to connect to network: ");
-    Serial.println(ssid);
-    // Connect to WPA/WPA2 network:
-    status = WiFi.begin(ssid, pass);
-
-    // wait 10 seconds for connection:
-    delay(10000);
+    Serial.println("No ECCX08 present!");
+    while (1)
+      ;
   }
 
-  // you're connected now, so print out the data:
-  Serial.println("You're connected to the network");
+  // reconstruct the self signed cert
+  ECCX08SelfSignedCert.beginReconstruction(0, 8);
+  ECCX08SelfSignedCert.setCommonName(ECCX08.serialNumber());
+  ECCX08SelfSignedCert.endReconstruction();
 
-  Serial.println("----------------------------------------");
-  printData();
-  Serial.println("----------------------------------------");
+  // Set a callback to get the current time
+  // used to validate the servers certificate
+  ArduinoBearSSL.onGetTime(getTime);
+
+  // Set the ECCX08 slot to use for the private key
+  // and the accompanying public certificate for it
+  sslClient.setEccSlot(0, ECCX08SelfSignedCert.bytes(), ECCX08SelfSignedCert.length());
+
+  // Set the client id used for MQTT as the device id
+  mqttClient.setId(deviceId);
+
+  // Set the username to "<broker>/<device id>/api-version=2018-06-30" and empty password
+  String username;
+
+  username += broker;
+  username += "/";
+  username += deviceId;
+  username += "/api-version=2018-06-30";
+
+  mqttClient.setUsernamePassword(username, "");
+
+  // Set the message callback, this function is
+  // called when the MQTTClient receives a message
+  mqttClient.onMessage(onMessageReceived);
 }
+
 void loop()
 {
-  // check the network connection once every 10 seconds:
-  delay(10000);
-  printData();
-  Serial.println("----------------------------------------");
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    connectWiFi();
+  }
+
+  if (!mqttClient.connected())
+  {
+    connectMQTT();
+  }
+
+  // poll for new MQTT messages and send keep alives
+  mqttClient.poll();
+
+  // publish a message roughly every 5 seconds.
+  if (millis() - lastMillis > 5000)
+  {
+    lastMillis = millis();
+
+    publishMessage();
+  }
 }
 
-void printData()
+unsigned long getTime()
 {
-  Serial.println("Board Information:");
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+  // get the current time from the WiFi module
+  return WiFi.getTime();
+}
+
+void connectWiFi()
+{
+  Serial.print("Attempting to connect to SSID: ");
+  Serial.print(ssid);
+  Serial.print(" ");
+
+  while (WiFi.begin(ssid, pass) != WL_CONNECTED)
+  {
+    Serial.print(".");
+    delay(5000);
+  }
+  Serial.println();
+
+  Serial.println("You're connected to the network");
+  Serial.println();
+}
+
+void connectMQTT()
+{
+  Serial.print("Attempting to MQTT broker: ");
+  Serial.print(broker);
+  Serial.println(" ");
+
+  while (!mqttClient.connect(broker, 8883))
+  {
+    Serial.print(".");
+    Serial.println(mqttClient.connectError());
+    delay(5000);
+  }
+  Serial.println();
+
+  Serial.println("You're connected to the MQTT broker");
+  Serial.println();
+
+  // subscribe to a topic
+  mqttClient.subscribe("devices/" + deviceId + "/messages/devicebound/#");
+}
+
+void publishMessage()
+{
+  Serial.println("Publishing message");
+
+  // send message, the Print interface can be used to set the message contents
+  mqttClient.beginMessage("devices/" + deviceId + "/messages/events/");
+  mqttClient.print("hello ");
+  mqttClient.print(millis());
+  mqttClient.endMessage();
+}
+
+void onMessageReceived(int messageSize)
+{
+  // we received a message, print out the topic and contents
+  Serial.print("Received a message with topic '");
+  Serial.print(mqttClient.messageTopic());
+  Serial.print("', length ");
+  Serial.print(messageSize);
+  Serial.println(" bytes:");
+
+  // use the Stream interface to print the contents
+  while (mqttClient.available())
+  {
+    Serial.print((char)mqttClient.read());
+  }
+  Serial.println();
 
   Serial.println();
-  Serial.println("Network Information:");
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
-
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.println(rssi);
 }

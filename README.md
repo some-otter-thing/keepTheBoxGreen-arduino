@@ -17,4 +17,6 @@ touch arduino_secrets.h
 ```
 #define SECRET_SSID "here is network name"
 #define SECRET_PASS "here is the password of wifi"
+#define SECRET_BROKER    ""
+#define SECRET_DEVICE_ID ""
 ```
