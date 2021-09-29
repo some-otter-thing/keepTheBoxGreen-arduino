@@ -11,7 +11,7 @@ const char broker[] = SECRET_BROKER;
 String deviceId = SECRET_DEVICE_ID;
 
 WiFiClient wifiClient;               // Used for the TCP socket connection
-BearSSLClient sslClient(wifiClient); // Used for SSL/TLS connection, integrates with ECC508
+BearSSLClient sslClient(wifiClient); // Used for SSL/TLS connection
 MqttClient mqttClient(sslClient);
 
 unsigned long lastMillis = 0;
@@ -24,8 +24,7 @@ void setup()
   if (!ECCX08.begin())
   {
     Serial.println("No ECCX08 present!");
-    while (1)
-      ;
+    while (1);
   }
 
   // reconstruct the self signed cert
@@ -54,9 +53,7 @@ void setup()
 
   mqttClient.setUsernamePassword(username, "");
 
-  // Set the message callback, this function is
-  // called when the MQTTClient receives a message
-  mqttClient.onMessage(onMessageReceived);
+  mqttClient.onMessage(onMessageReceived); // called when the MQTTClient receives a message
 }
 
 void loop()
@@ -85,7 +82,6 @@ void loop()
 
 unsigned long getTime()
 {
-  // get the current time from the WiFi module
   return WiFi.getTime();
 }
 
