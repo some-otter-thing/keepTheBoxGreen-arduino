@@ -3,43 +3,33 @@
 
 #include "arduino_secrets.h"
 
-char ssid[] = SECRET_SSID;   // your network SSID (name)
-char pass[] = SECRET_PASS;   // your network password (use for WPA, or use as key for WEP)
-int status = WL_IDLE_STATUS; // the Wifi radio's status
+char ssid[] = SECRET_SSID;   
+char pass[] = SECRET_PASS;   
+int status = WL_IDLE_STATUS; 
 
 void setup()
 {
-  //Initialize serial and wait for port to open:
   Serial.begin(9600);
   while (!Serial);
-
-  // attempt to connect to Wifi network:
   while (status != WL_CONNECTED)
   {
     Serial.print("Attempting to connect to network: ");
     Serial.println(ssid);
-    // Connect to WPA/WPA2 network:
     status = WiFi.begin(ssid, pass);
-
-    // wait 10 seconds for connection:
     delay(10000);
   }
-
-  // you're connected now, so print out the data:
   Serial.println("You're connected to the network");
-
   Serial.println("----------------------------------------");
   printData();
   Serial.println("----------------------------------------");
 }
 void loop()
 {
-  // check the network connection once every 10 seconds:
   delay(10000);
   printData();
   Serial.println("----------------------------------------");
 }
-
+// keep this function for now
 void printData()
 {
   Serial.println("Board Information:");
