@@ -2,6 +2,7 @@
 #include <WiFiNINA.h>
 
 #include "arduino_secrets.h"
+#include "main_constants.h"
 
 char ssid[] = SECRET_SSID;   
 char pass[] = SECRET_PASS;   
@@ -19,32 +20,9 @@ void setup()
     delay(10000);
   }
   Serial.println("You're connected to the network");
-  Serial.println("----------------------------------------");
-  printData();
-  Serial.println("----------------------------------------");
+  printWiFiData();
 }
 void loop()
 {
   delay(10000);
-  printData();
-  Serial.println("----------------------------------------");
-}
-// keep this function for now
-void printData()
-{
-  Serial.println("Board Information:");
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
-
-  Serial.println();
-  Serial.println("Network Information:");
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
-
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.println(rssi);
 }
