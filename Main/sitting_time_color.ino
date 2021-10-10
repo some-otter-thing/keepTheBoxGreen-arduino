@@ -14,7 +14,9 @@ char* GetSittingTimeColor(int distance, long currentTime)
     timeSitting = currentTime - previousTime;
     if (timeSitting >= SITTING_TIME_GREEN && timeSitting < SITTING_TIME_YELLOW)
     {
-      Serial.println("Time for work");
+      Serial.println("Focused work for ");
+      Serial.print(timeSitting);
+      Serial.println("\n------------");
       return "GREEN";
     }
     else if (timeSitting >= SITTING_TIME_YELLOW && timeSitting < SITTING_TIME_RED)
