@@ -5,24 +5,27 @@
 #include "main_constants.h"
 #include <DHT.h>
 
+#include <FastLED.h>
+
 char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
 int status = WL_IDLE_STATUS;
 DHT dht(DHTPIN, DHTTYPE);
+CRGB leds[NUM_LEDS]; //
 
 void setup()
 {
   Serial.begin(9600);
-  while (!Serial);
-  while (status != WL_CONNECTED)
-  {
-    Serial.print("Attempting to connect to network: ");
-    Serial.println(ssid);
-    status = WiFi.begin(ssid, pass);
-    delay(10000);
-  }
-  Serial.println("You're connected to the network");
-  printWiFiData();
+  //  while (!Serial);
+  //  while (status != WL_CONNECTED)
+  //  {
+  //    Serial.print("Attempting to connect to network: ");
+  //    Serial.println(ssid);
+  //    status = WiFi.begin(ssid, pass);
+  //    delay(10000);
+  //  }
+  //  Serial.println("You're connected to the network");
+  //  printWiFiData();
 
   // temperature and humdity
   dht.begin();
@@ -30,9 +33,8 @@ void setup()
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   // LEDs
-  pinMode(LED_PIN_1, OUTPUT);
-  pinMode(LED_PIN_2, OUTPUT);
-  pinMode(LED_PIN_3, OUTPUT);
+  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
 }
 void loop()
 {
@@ -55,23 +57,27 @@ void loop()
 
   if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
   {
-    digitalWrite(LED_PIN_1, HIGH);
-    digitalWrite(LED_PIN_2, LOW);
-    digitalWrite(LED_PIN_3, LOW);
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      leds[i] = CRGB(0, 255, 0);
+      FastLED.show();
+    }
   }
-    else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
+  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
   {
-    digitalWrite(LED_PIN_1, LOW);
-    digitalWrite(LED_PIN_2, LOW);
-    digitalWrite(LED_PIN_3, HIGH);
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      leds[i] = CRGB(255, 0, 0);
+      FastLED.show();
+    }
   }
   else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW)
   {
-    digitalWrite(LED_PIN_1, LOW);
-    digitalWrite(LED_PIN_2, HIGH);
-    digitalWrite(LED_PIN_3, LOW);
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      leds[i] = CRGB(255, 255, 0);
+      FastLED.show();
+    }
   }
-
-
   delay(2000);
 }
