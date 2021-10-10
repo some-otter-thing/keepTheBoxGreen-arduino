@@ -11,21 +11,22 @@ char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
 int status = WL_IDLE_STATUS;
 DHT dht(DHTPIN, DHTTYPE);
-CRGB leds[NUM_LEDS]; //
+CRGB leds[NUM_LEDS];
 
 void setup()
 {
   Serial.begin(9600);
-  //  while (!Serial);
-  //  while (status != WL_CONNECTED)
-  //  {
-  //    Serial.print("Attempting to connect to network: ");
-  //    Serial.println(ssid);
-  //    status = WiFi.begin(ssid, pass);
-  //    delay(10000);
-  //  }
-  //  Serial.println("You're connected to the network");
-  //  printWiFiData();
+  // wifi logic
+  while (!Serial);
+  while (status != WL_CONNECTED)
+  {
+    Serial.print("Attempting to connect to network: ");
+    Serial.println(ssid);
+    status = WiFi.begin(ssid, pass);
+    delay(10000);
+  }
+  Serial.println("You're connected to the network");
+  printWiFiData();
 
   // temperature and humdity
   dht.begin();
