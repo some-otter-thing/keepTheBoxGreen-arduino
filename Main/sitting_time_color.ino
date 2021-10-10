@@ -1,6 +1,6 @@
 #include "sitting_time_constants.h"
 
-char* GetSittingTimeColor(int distance, long currentTime)
+char* getSittingTimeColor(int distance, long currentTime)
 {
   if (distance >= DISTANCE_THRESHOLD)
   {
