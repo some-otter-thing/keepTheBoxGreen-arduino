@@ -1,1 +1,1 @@
-const int BASELINE_HUM = 40;
+const int BASELINE_HUM = 50;
