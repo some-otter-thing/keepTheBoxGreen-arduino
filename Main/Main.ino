@@ -2,153 +2,105 @@
 #include <ArduinoECCX08.h>
 #include <utility/ECCX08SelfSignedCert.h>
 #include <ArduinoMqttClient.h>
-#include <WiFiNINA.h>
-#include "arduino_secrets.h"
 
-const char ssid[] = SECRET_SSID;
-const char pass[] = SECRET_PASS;
-const char broker[] = SECRET_BROKER;
-String deviceId = SECRET_DEVICE_ID;
+#include <WiFiNINA.h>
+
+#include "arduino_secrets.h"
+#include "main_constants.h"
+#include <DHT.h>
 
 WiFiClient wifiClient;               // Used for the TCP socket connection
 BearSSLClient sslClient(wifiClient); // Used for SSL/TLS connection
 MqttClient mqttClient(sslClient);
 
-unsigned long lastMillis = 0;
+char ssid[] = SECRET_SSID;
+char pass[] = SECRET_PASS;
+const char broker[] = SECRET_BROKER;
+String deviceId = SECRET_DEVICE_ID;
+
+int status = WL_IDLE_STATUS;
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup()
 {
-  Serial.begin(9600); //Initialize serial and wait for port to open:
+  Serial.begin(9600);
   while (!Serial);
 
-  if (!ECCX08.begin())
+  // wifi
+  while (status != WL_CONNECTED)
   {
-    Serial.println("No ECCX08 present!");
-    while (1);
+    setupWIFI();
   }
+  Serial.println("You're connected to the network");
+  printWiFiData(); // will be deleted
 
-  // reconstruct the self signed cert
-  ECCX08SelfSignedCert.beginReconstruction(0, 8);
-  ECCX08SelfSignedCert.setCommonName(ECCX08.serialNumber());
-  ECCX08SelfSignedCert.endReconstruction();
+  // mqtt
+  setupMQTT();
 
-  // Set a callback to get the current time
-  // used to validate the servers certificate
-  ArduinoBearSSL.onGetTime(getTime);
-
-  // Set the ECCX08 slot to use for the private key
-  // and the accompanying public certificate for it
-  sslClient.setEccSlot(0, ECCX08SelfSignedCert.bytes(), ECCX08SelfSignedCert.length());
-
-  // Set the client id used for MQTT as the device id
-  mqttClient.setId(deviceId);
-
-  // Set the username to "<broker>/<device id>/api-version=2018-06-30" and empty password
-  String username;
-
-  username += broker;
-  username += "/";
-  username += deviceId;
-  username += "/api-version=2018-06-30";
-
-  mqttClient.setUsernamePassword(username, "");
-
-  mqttClient.onMessage(onMessageReceived); // called when the MQTTClient receives a message
+  // temperature and humdity
+  dht.begin();
+  // ultrasonic
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  // LEDs
+  pinMode(LED_PIN_1, OUTPUT);
+  pinMode(LED_PIN_2, OUTPUT);
+  pinMode(LED_PIN_3, OUTPUT);
 }
-
 void loop()
 {
+  unsigned long currentTime = millis(); // set up current time to arduino running time
+  unsigned long lastMillis = 0;         // used for mqtt connection
   if (WiFi.status() != WL_CONNECTED)
   {
     connectWiFi();
   }
-
   if (!mqttClient.connected())
   {
     connectMQTT();
   }
-
   // poll for new MQTT messages and send keep alives
   mqttClient.poll();
 
-  // publish a message roughly every 5 seconds.
+  digitalWrite(trigPin, LOW);
+  delay(1000);
+  digitalWrite(trigPin, HIGH);
+  delay(1000);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH); // returns the sound wave travel time in microseconds
+  distance = duration * 0.034 / 2;   // speed of sound wave divided by 2 (go and back)
+
+  temp = dht.readTemperature();
+  hum = dht.readHumidity();
+  sittingTimeColor = getSittingTimeColor(distance, currentTime);
+  tempColor = getTempColor(temp);
+  humColor = getHumColor(hum);
+
+  // publish a message every 5 seconds.
   if (millis() - lastMillis > 5000)
   {
     lastMillis = millis();
-
-    publishMessage();
+    publishMessage(); // temp, hum, sittingTimeColor, dustConcentration will be published here
   }
-}
 
-unsigned long getTime()
-{
-  return WiFi.getTime();
-}
-
-void connectWiFi()
-{
-  Serial.print("Attempting to connect to SSID: ");
-  Serial.print(ssid);
-  Serial.print(" ");
-
-  while (WiFi.begin(ssid, pass) != WL_CONNECTED)
+  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
   {
-    Serial.print(".");
-    delay(5000);
+    digitalWrite(LED_PIN_1, HIGH);
+    digitalWrite(LED_PIN_2, LOW);
+    digitalWrite(LED_PIN_3, LOW);
   }
-  Serial.println();
-
-  Serial.println("You're connected to the network");
-  Serial.println();
-}
-
-void connectMQTT()
-{
-  Serial.print("Attempting to MQTT broker: ");
-  Serial.print(broker);
-  Serial.println(" ");
-
-  while (!mqttClient.connect(broker, 8883))
+  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
   {
-    Serial.print(".");
-    Serial.println(mqttClient.connectError());
-    delay(5000);
+    digitalWrite(LED_PIN_1, LOW);
+    digitalWrite(LED_PIN_2, LOW);
+    digitalWrite(LED_PIN_3, HIGH);
   }
-  Serial.println();
-
-  Serial.println("You're connected to the MQTT broker");
-  Serial.println();
-
-  // subscribe to a topic
-  mqttClient.subscribe("devices/" + deviceId + "/messages/devicebound/#");
-}
-
-void publishMessage()
-{
-  Serial.println("Publishing message");
-
-  // send message, the Print interface can be used to set the message contents
-  mqttClient.beginMessage("devices/" + deviceId + "/messages/events/");
-  mqttClient.print("hello ");
-  mqttClient.print(millis());
-  mqttClient.endMessage();
-}
-
-void onMessageReceived(int messageSize)
-{
-  // we received a message, print out the topic and contents
-  Serial.print("Received a message with topic '");
-  Serial.print(mqttClient.messageTopic());
-  Serial.print("', length ");
-  Serial.print(messageSize);
-  Serial.println(" bytes:");
-
-  // use the Stream interface to print the contents
-  while (mqttClient.available())
+  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW)
   {
-    Serial.print((char)mqttClient.read());
+    digitalWrite(LED_PIN_1, LOW);
+    digitalWrite(LED_PIN_2, HIGH);
+    digitalWrite(LED_PIN_3, LOW);
   }
-  Serial.println();
-
-  Serial.println();
+  delay(2000);
 }
