@@ -1,7 +1,7 @@
 #include <ArduinoBearSSL.h>
 #include <ArduinoECCX08.h>
-#include <utility/ECCX08SelfSignedCert.h>
 #include <ArduinoMqttClient.h>
+#include <utility/ECCX08SelfSignedCert.h>
 
 #include <WiFiNINA.h>
 
@@ -47,11 +47,11 @@ void setup() {
                ST77XX_WHITE);
   delay(1000);
 
-  while (!Serial);
+  while (!Serial)
+    ;
 
   // wifi
-  while (status != WL_CONNECTED)
-  {
+  while (status != WL_CONNECTED) {
     setupWIFI();
   }
   Serial.println("You're connected to the network");
@@ -65,22 +65,20 @@ void setup() {
   // ultrasonic
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  
+
   // LEDs
   pinMode(LED_PIN_1, OUTPUT);
   pinMode(LED_PIN_2, OUTPUT);
   pinMode(LED_PIN_3, OUTPUT);
 }
-void loop()
-{
-  unsigned long currentTime = millis(); // set up current time to arduino running time
-  unsigned long lastMillis = 0;         // used for mqtt connection
-  if (WiFi.status() != WL_CONNECTED)
-  {
+void loop() {
+  unsigned long currentTime =
+      millis();                 // set up current time to arduino running time
+  unsigned long lastMillis = 0; // used for mqtt connection
+  if (WiFi.status() != WL_CONNECTED) {
     connectWiFi();
   }
-  if (!mqttClient.connected())
-  {
+  if (!mqttClient.connected()) {
     connectMQTT();
   }
   // poll for new MQTT messages and send keep alives
@@ -104,20 +102,17 @@ void loop()
   humColor = getHumColor(hum);
 
   // publish a message every 5 seconds.
-  if (millis() - lastMillis > 5000)
-  {
+  if (millis() - lastMillis > 5000) {
     lastMillis = millis();
-    publishMessage(); // temp, hum, sittingTimeColor, dustConcentration will be published here
+    publishMessage(); // temp, hum, sittingTimeColor, dustConcentration will be
+                      // published here
   }
 
-  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
-  {
+  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) {
     digitalWrite(LED_PIN_1, HIGH);
     digitalWrite(LED_PIN_2, LOW);
     digitalWrite(LED_PIN_3, LOW);
-  }
-  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
-  {
+  } else if (sittingTimeColor == RED || tempColor == RED || humColor == RED) {
     digitalWrite(LED_PIN_1, LOW);
     digitalWrite(LED_PIN_2, LOW);
     digitalWrite(LED_PIN_3, HIGH);
@@ -127,12 +122,6 @@ void loop()
     digitalWrite(LED_PIN_2, HIGH);
     digitalWrite(LED_PIN_3, LOW);
   }
-
-  // display
-  tft.invertDisplay(true);
-  delay(500);
-  tft.invertDisplay(false);
-  delay(500);
 
   delay(2000);
 }
