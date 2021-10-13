@@ -1,39 +1,35 @@
 #include <WiFiNINA.h>
 
 #include "arduino_secrets.h"
+#include "display_constants.h"
 #include "main_constants.h"
 #include <DHT.h>
 
-// display
+// importing display lib
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library for ST7735
 #include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
 #include <SPI.h>
-#define TFT_CS     6
-#define TFT_RST   -1    
-#define TFT_DC     7
-// Option 2: use any pins but a little slower!
-#define TFT_SCLK 9   // set these to be whatever pins you like!
-#define TFT_MOSI 8   // set these to be whatever pins you like!
-Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
-float p = 3.1415926;
-// display end
 
-
+// wifi
 char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
 int status = WL_IDLE_STATUS;
+
+// interfacing hum/temp sensor pins
 DHT dht(DHTPIN, DHTTYPE);
 
-void setup()
-{
+// interfacing display lib pins
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
+void setup() {
   Serial.begin(9600);
 
   // display
   Serial.print(F("Hello! ST77xx TFT Test"));
 
   // Use this initializer if using a 1.8" TFT screen:
-  tft.initR(INITR_BLACKTAB);      // Init ST7735S chip, black tab
+  tft.initR(INITR_BLACKTAB); // Init ST7735S chip, black tab
 
   Serial.println(F("Initialized"));
 
@@ -46,7 +42,14 @@ void setup()
 
   // large block of text
   tft.fillScreen(ST77XX_BLACK);
-  testdrawtext("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur adipiscing ante sed nibh tincidunt feugiat. Maecenas enim massa, fringilla sed malesuada et, malesuada sit amet turpis. Sed porttitor neque ut ante pretium vitae malesuada nunc bibendum. Nullam aliquet ultrices massa eu hendrerit. Ut sed nisi lorem. In vestibulum purus a tortor imperdiet posuere. ", ST77XX_WHITE);
+  testdrawtext(
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur "
+      "adipiscing ante sed nibh tincidunt feugiat. Maecenas enim massa, "
+      "fringilla sed malesuada et, malesuada sit amet turpis. Sed porttitor "
+      "neque ut ante pretium vitae malesuada nunc bibendum. Nullam aliquet "
+      "ultrices massa eu hendrerit. Ut sed nisi lorem. In vestibulum purus a "
+      "tortor imperdiet posuere. ",
+      ST77XX_WHITE);
   delay(1000);
 
   // tft print function!
@@ -54,7 +57,7 @@ void setup()
   delay(4000);
 
   // a single pixel
-  tft.drawPixel(tft.width()/2, tft.height()/2, ST77XX_GREEN);
+  tft.drawPixel(tft.width() / 2, tft.height() / 2, ST77XX_GREEN);
   delay(500);
 
   // line draw test
@@ -86,7 +89,8 @@ void setup()
   delay(1000);
   // display
 
-  while (!Serial);
+  while (!Serial)
+    ;
   // while (status != WL_CONNECTED)
   // {
   //   Serial.print("Attempting to connect to network: ");
@@ -106,14 +110,11 @@ void setup()
   pinMode(LED_PIN_1, OUTPUT);
   pinMode(LED_PIN_2, OUTPUT);
   pinMode(LED_PIN_3, OUTPUT);
-
-
 }
 
-
-void loop()
-{
-  unsigned long currentTime = millis(); //set up current time to arduino running time
+void loop() {
+  unsigned long currentTime =
+      millis(); // set up current time to arduino running time
 
   digitalWrite(trigPin, LOW);
   delay(1000);
@@ -121,8 +122,10 @@ void loop()
   delay(1000);
   digitalWrite(trigPin, LOW);
 
-  duration = pulseIn(echoPin, HIGH); // returns the sound wave travel time in microseconds
-  distance = duration * 0.034 / 2;   // speed of sound wave divided by 2 (go and back)
+  duration = pulseIn(
+      echoPin, HIGH); // returns the sound wave travel time in microseconds
+  distance =
+      duration * 0.034 / 2; // speed of sound wave divided by 2 (go and back)
 
   temp = dht.readTemperature();
   hum = dht.readHumidity();
@@ -130,20 +133,16 @@ void loop()
   tempColor = getTempColor(temp);
   humColor = getHumColor(hum);
 
-  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
-  {
+  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) {
     digitalWrite(LED_PIN_1, HIGH);
     digitalWrite(LED_PIN_2, LOW);
     digitalWrite(LED_PIN_3, LOW);
-  }
-    else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
-  {
+  } else if (sittingTimeColor == RED || tempColor == RED || humColor == RED) {
     digitalWrite(LED_PIN_1, LOW);
     digitalWrite(LED_PIN_2, LOW);
     digitalWrite(LED_PIN_3, HIGH);
-  }
-  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW)
-  {
+  } else if (sittingTimeColor == YELLOW || tempColor == YELLOW ||
+             humColor == YELLOW) {
     digitalWrite(LED_PIN_1, LOW);
     digitalWrite(LED_PIN_2, HIGH);
     digitalWrite(LED_PIN_3, LOW);
@@ -155,50 +154,47 @@ void loop()
   tft.invertDisplay(false);
   delay(500);
 
-
   delay(2000);
 }
 
-
-
 void testlines(uint16_t color) {
   tft.fillScreen(ST77XX_BLACK);
-  for (int16_t x=0; x < tft.width(); x+=6) {
-    tft.drawLine(0, 0, x, tft.height()-1, color);
+  for (int16_t x = 0; x < tft.width(); x += 6) {
+    tft.drawLine(0, 0, x, tft.height() - 1, color);
     delay(0);
   }
-  for (int16_t y=0; y < tft.height(); y+=6) {
-    tft.drawLine(0, 0, tft.width()-1, y, color);
-    delay(0);
-  }
-
-  tft.fillScreen(ST77XX_BLACK);
-  for (int16_t x=0; x < tft.width(); x+=6) {
-    tft.drawLine(tft.width()-1, 0, x, tft.height()-1, color);
-    delay(0);
-  }
-  for (int16_t y=0; y < tft.height(); y+=6) {
-    tft.drawLine(tft.width()-1, 0, 0, y, color);
+  for (int16_t y = 0; y < tft.height(); y += 6) {
+    tft.drawLine(0, 0, tft.width() - 1, y, color);
     delay(0);
   }
 
   tft.fillScreen(ST77XX_BLACK);
-  for (int16_t x=0; x < tft.width(); x+=6) {
-    tft.drawLine(0, tft.height()-1, x, 0, color);
+  for (int16_t x = 0; x < tft.width(); x += 6) {
+    tft.drawLine(tft.width() - 1, 0, x, tft.height() - 1, color);
     delay(0);
   }
-  for (int16_t y=0; y < tft.height(); y+=6) {
-    tft.drawLine(0, tft.height()-1, tft.width()-1, y, color);
+  for (int16_t y = 0; y < tft.height(); y += 6) {
+    tft.drawLine(tft.width() - 1, 0, 0, y, color);
     delay(0);
   }
 
   tft.fillScreen(ST77XX_BLACK);
-  for (int16_t x=0; x < tft.width(); x+=6) {
-    tft.drawLine(tft.width()-1, tft.height()-1, x, 0, color);
+  for (int16_t x = 0; x < tft.width(); x += 6) {
+    tft.drawLine(0, tft.height() - 1, x, 0, color);
     delay(0);
   }
-  for (int16_t y=0; y < tft.height(); y+=6) {
-    tft.drawLine(tft.width()-1, tft.height()-1, 0, y, color);
+  for (int16_t y = 0; y < tft.height(); y += 6) {
+    tft.drawLine(0, tft.height() - 1, tft.width() - 1, y, color);
+    delay(0);
+  }
+
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t x = 0; x < tft.width(); x += 6) {
+    tft.drawLine(tft.width() - 1, tft.height() - 1, x, 0, color);
+    delay(0);
+  }
+  for (int16_t y = 0; y < tft.height(); y += 6) {
+    tft.drawLine(tft.width() - 1, tft.height() - 1, 0, y, color);
     delay(0);
   }
 }
@@ -212,40 +208,43 @@ void testdrawtext(char *text, uint16_t color) {
 
 void testfastlines(uint16_t color1, uint16_t color2) {
   tft.fillScreen(ST77XX_BLACK);
-  for (int16_t y=0; y < tft.height(); y+=5) {
+  for (int16_t y = 0; y < tft.height(); y += 5) {
     tft.drawFastHLine(0, y, tft.width(), color1);
   }
-  for (int16_t x=0; x < tft.width(); x+=5) {
+  for (int16_t x = 0; x < tft.width(); x += 5) {
     tft.drawFastVLine(x, 0, tft.height(), color2);
   }
 }
 
 void testdrawrects(uint16_t color) {
   tft.fillScreen(ST77XX_BLACK);
-  for (int16_t x=0; x < tft.width(); x+=6) {
-    tft.drawRect(tft.width()/2 -x/2, tft.height()/2 -x/2 , x, x, color);
+  for (int16_t x = 0; x < tft.width(); x += 6) {
+    tft.drawRect(tft.width() / 2 - x / 2, tft.height() / 2 - x / 2, x, x,
+                 color);
   }
 }
 
 void testfillrects(uint16_t color1, uint16_t color2) {
   tft.fillScreen(ST77XX_BLACK);
-  for (int16_t x=tft.width()-1; x > 6; x-=6) {
-    tft.fillRect(tft.width()/2 -x/2, tft.height()/2 -x/2 , x, x, color1);
-    tft.drawRect(tft.width()/2 -x/2, tft.height()/2 -x/2 , x, x, color2);
+  for (int16_t x = tft.width() - 1; x > 6; x -= 6) {
+    tft.fillRect(tft.width() / 2 - x / 2, tft.height() / 2 - x / 2, x, x,
+                 color1);
+    tft.drawRect(tft.width() / 2 - x / 2, tft.height() / 2 - x / 2, x, x,
+                 color2);
   }
 }
 
 void testfillcircles(uint8_t radius, uint16_t color) {
-  for (int16_t x=radius; x < tft.width(); x+=radius*2) {
-    for (int16_t y=radius; y < tft.height(); y+=radius*2) {
+  for (int16_t x = radius; x < tft.width(); x += radius * 2) {
+    for (int16_t y = radius; y < tft.height(); y += radius * 2) {
       tft.fillCircle(x, y, radius, color);
     }
   }
 }
 
 void testdrawcircles(uint8_t radius, uint16_t color) {
-  for (int16_t x=0; x < tft.width()+radius; x+=radius*2) {
-    for (int16_t y=0; y < tft.height()+radius; y+=radius*2) {
+  for (int16_t x = 0; x < tft.width() + radius; x += radius * 2) {
+    for (int16_t y = 0; y < tft.height() + radius; y += radius * 2) {
       tft.drawCircle(x, y, radius, color);
     }
   }
@@ -255,16 +254,16 @@ void testtriangles() {
   tft.fillScreen(ST77XX_BLACK);
   uint16_t color = 0xF800;
   int t;
-  int w = tft.width()/2;
-  int x = tft.height()-1;
+  int w = tft.width() / 2;
+  int x = tft.height() - 1;
   int y = 0;
   int z = tft.width();
-  for(t = 0 ; t <= 15; t++) {
+  for (t = 0; t <= 15; t++) {
     tft.drawTriangle(w, y, y, x, z, x, color);
-    x-=4;
-    y+=4;
-    z-=4;
-    color+=100;
+    x -= 4;
+    y += 4;
+    z -= 4;
+    color += 100;
   }
 }
 
@@ -273,20 +272,20 @@ void testroundrects() {
   uint16_t color = 100;
   int i;
   int t;
-  for(t = 0 ; t <= 4; t+=1) {
+  for (t = 0; t <= 4; t += 1) {
     int x = 0;
     int y = 0;
-    int w = tft.width()-2;
-    int h = tft.height()-2;
-    for(i = 0 ; i <= 16; i+=1) {
+    int w = tft.width() - 2;
+    int h = tft.height() - 2;
+    for (i = 0; i <= 16; i += 1) {
       tft.drawRoundRect(x, y, w, h, 5, color);
-      x+=2;
-      y+=3;
-      w-=4;
-      h-=6;
-      color+=1100;
+      x += 2;
+      y += 3;
+      w -= 4;
+      h -= 6;
+      color += 1100;
     }
-    color+=100;
+    color += 100;
   }
 }
 
@@ -349,4 +348,3 @@ void mediabuttons() {
   // play color
   tft.fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_GREEN);
 }
-
