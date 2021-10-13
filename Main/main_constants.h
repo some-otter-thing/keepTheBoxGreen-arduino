@@ -6,9 +6,11 @@ char* GREEN = "GREEN";
 char* YELLOW = "YELLOW";
 char* RED = "RED";
 
+// ultrasonic sensor
 #define echoPin 5
 #define trigPin 0
 
+// led
 #define LED_PIN 4
 #define NUM_LEDS 20
 #define BRIGHTNESS 20
