@@ -1,3 +1,8 @@
+#include <ArduinoBearSSL.h>
+#include <ArduinoECCX08.h>
+#include <utility/ECCX08SelfSignedCert.h>
+#include <ArduinoMqttClient.h>
+
 #include <WiFiNINA.h>
 
 #include "arduino_secrets.h"
@@ -12,8 +17,15 @@
 #include <SPI.h>
 
 // wifi
+WiFiClient wifiClient;               // Used for the TCP socket connection
+BearSSLClient sslClient(wifiClient); // Used for SSL/TLS connection
+MqttClient mqttClient(sslClient);
+
 char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
+const char broker[] = SECRET_BROKER;
+String deviceId = SECRET_DEVICE_ID;
+
 int status = WL_IDLE_STATUS;
 
 // interfacing hum/temp sensor pins
@@ -36,15 +48,17 @@ void setup() {
   delay(1000);
 
   while (!Serial);
-  // while (status != WL_CONNECTED)
-  // {
-  //   Serial.print("Attempting to connect to network: ");
-  //   Serial.println(ssid);
-  //   status = WiFi.begin(ssid, pass);
-  //   delay(10000);
-  // }
-  // Serial.println("You're connected to the network");
-  // printWiFiData();
+
+  // wifi
+  while (status != WL_CONNECTED)
+  {
+    setupWIFI();
+  }
+  Serial.println("You're connected to the network");
+  printWiFiData(); // will be deleted
+
+  // mqtt
+  setupMQTT();
 
   // temperature and humdity
   dht.begin();
@@ -57,10 +71,20 @@ void setup() {
   pinMode(LED_PIN_2, OUTPUT);
   pinMode(LED_PIN_3, OUTPUT);
 }
-
-void loop() {
-  unsigned long currentTime =
-      millis(); // set up current time to arduino running time
+void loop()
+{
+  unsigned long currentTime = millis(); // set up current time to arduino running time
+  unsigned long lastMillis = 0;         // used for mqtt connection
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    connectWiFi();
+  }
+  if (!mqttClient.connected())
+  {
+    connectMQTT();
+  }
+  // poll for new MQTT messages and send keep alives
+  mqttClient.poll();
 
   digitalWrite(trigPin, LOW);
   delay(1000);
@@ -79,11 +103,21 @@ void loop() {
   tempColor = getTempColor(temp);
   humColor = getHumColor(hum);
 
-  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) {
+  // publish a message every 5 seconds.
+  if (millis() - lastMillis > 5000)
+  {
+    lastMillis = millis();
+    publishMessage(); // temp, hum, sittingTimeColor, dustConcentration will be published here
+  }
+
+  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
+  {
     digitalWrite(LED_PIN_1, HIGH);
     digitalWrite(LED_PIN_2, LOW);
     digitalWrite(LED_PIN_3, LOW);
-  } else if (sittingTimeColor == RED || tempColor == RED || humColor == RED) {
+  }
+  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
+  {
     digitalWrite(LED_PIN_1, LOW);
     digitalWrite(LED_PIN_2, LOW);
     digitalWrite(LED_PIN_3, HIGH);
