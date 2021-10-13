@@ -2,7 +2,7 @@
 #include <ArduinoECCX08.h>
 #include <utility/ECCX08SelfSignedCert.h>
 #include <ArduinoMqttClient.h>
-
+#include <ArduinoJson.h>
 #include <WiFiNINA.h>
 
 #include "arduino_secrets.h"

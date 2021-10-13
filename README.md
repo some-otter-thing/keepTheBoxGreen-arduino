@@ -17,7 +17,8 @@ touch arduino_secrets.h
 
 ### Guides:
 
-Connecting to wifi  - <a href="https://www.arduino.cc/en/Guide/MKRWiFi1010/connecting-to-wifi-network">link</a>
+* Connecting to wifi  - <a href="https://www.arduino.cc/en/Guide/MKRWiFi1010/connecting-to-wifi-network">link</a>
 
-Explanation of necessary drivers for the Arduino MKR1000 series of boards - <a href="https://www.arduino.cc/en/Guide/MKR1000">link</a>
+* Explanation of necessary drivers for the Arduino MKR1000 series of boards - <a href="https://www.arduino.cc/en/Guide/MKR1000">link</a>
 
+* Helper to make json https://arduinojson.org/v6/assistant/
