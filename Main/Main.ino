@@ -1,3 +1,7 @@
+#include <ArduinoBearSSL.h>
+#include <ArduinoECCX08.h>
+#include <utility/ECCX08SelfSignedCert.h>
+#include <ArduinoMqttClient.h>
 
 #include <WiFiNINA.h>
 
@@ -7,8 +11,15 @@
 
 #include <FastLED.h>
 
+WiFiClient wifiClient;               // Used for the TCP socket connection
+BearSSLClient sslClient(wifiClient); // Used for SSL/TLS connection
+MqttClient mqttClient(sslClient);
+
 char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
+const char broker[] = SECRET_BROKER;
+String deviceId = SECRET_DEVICE_ID;
+
 int status = WL_IDLE_STATUS;
 DHT dht(DHTPIN, DHTTYPE);
 CRGB leds[NUM_LEDS];
@@ -18,15 +29,17 @@ void setup()
   Serial.begin(9600);
   // wifi logic
   while (!Serial);
+
+  // wifi
   while (status != WL_CONNECTED)
   {
-    Serial.print("Attempting to connect to network: ");
-    Serial.println(ssid);
-    status = WiFi.begin(ssid, pass);
-    delay(10000);
+    setupWIFI();
   }
   Serial.println("You're connected to the network");
-  printWiFiData();
+  printWiFiData(); // will be deleted
+
+  // mqtt
+  setupMQTT();
 
   // temperature and humdity
   dht.begin();
@@ -39,7 +52,18 @@ void setup()
 }
 void loop()
 {
-  unsigned long currentTime = millis(); //set up current time to arduino running time
+  unsigned long currentTime = millis(); // set up current time to arduino running time
+  unsigned long lastMillis = 0;         // used for mqtt connection
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    connectWiFi();
+  }
+  if (!mqttClient.connected())
+  {
+    connectMQTT();
+  }
+  // poll for new MQTT messages and send keep alives
+  mqttClient.poll();
 
   digitalWrite(trigPin, LOW);
   delay(1000);
@@ -55,6 +79,13 @@ void loop()
   sittingTimeColor = getSittingTimeColor(distance, currentTime);
   tempColor = getTempColor(temp);
   humColor = getHumColor(hum);
+
+  // publish a message every 5 seconds.
+  if (millis() - lastMillis > 5000)
+  {
+    lastMillis = millis();
+    publishMessage(); // temp, hum, sittingTimeColor, dustConcentration will be published here
+  }
 
   if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
   {
