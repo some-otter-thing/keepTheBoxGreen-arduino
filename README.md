@@ -21,3 +21,11 @@ Connecting to wifi  - <a href="https://www.arduino.cc/en/Guide/MKRWiFi1010/conne
 
 Explanation of necessary drivers for the Arduino MKR1000 series of boards - <a href="https://www.arduino.cc/en/Guide/MKR1000">link</a>
 
+Used libraries
+1. Wifi:
+    * WiFiNINA library
+2. MQTT connection:
+    * ArduinoMqttClient
+    * ArduinoBearSSL
+    * ArduinoECCX08
+
