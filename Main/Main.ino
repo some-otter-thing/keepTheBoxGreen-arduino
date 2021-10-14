@@ -9,6 +9,7 @@
 #include "display_constants.h"
 #include "main_constants.h"
 #include <DHT.h>
+#include <FastLED.h>
 
 // importing display lib
 #include <Adafruit_GFX.h>    // Core graphics library
@@ -31,6 +32,7 @@ int status = WL_IDLE_STATUS;
 // interfacing hum/temp sensor pins
 DHT dht(DHTPIN, DHTTYPE);
 
+CRGB leds[NUM_LEDS];
 // interfacing display lib pins
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
@@ -67,9 +69,8 @@ void setup() {
   pinMode(echoPin, INPUT);
 
   // LEDs
-  pinMode(LED_PIN_1, OUTPUT);
-  pinMode(LED_PIN_2, OUTPUT);
-  pinMode(LED_PIN_3, OUTPUT);
+  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
 }
 void loop() {
   unsigned long currentTime =
@@ -108,20 +109,29 @@ void loop() {
                       // published here
   }
 
-  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) {
-    digitalWrite(LED_PIN_1, HIGH);
-    digitalWrite(LED_PIN_2, LOW);
-    digitalWrite(LED_PIN_3, LOW);
-  } else if (sittingTimeColor == RED || tempColor == RED || humColor == RED) {
-    digitalWrite(LED_PIN_1, LOW);
-    digitalWrite(LED_PIN_2, LOW);
-    digitalWrite(LED_PIN_3, HIGH);
-  } else if (sittingTimeColor == YELLOW || tempColor == YELLOW ||
-             humColor == YELLOW) {
-    digitalWrite(LED_PIN_1, LOW);
-    digitalWrite(LED_PIN_2, HIGH);
-    digitalWrite(LED_PIN_3, LOW);
+  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) 
+  {
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      leds[i] = CRGB(0, 255, 0);
+      FastLED.show();
+    }
+  } 
+  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED) 
+  {
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      leds[i] = CRGB(255, 0, 0);
+      FastLED.show();
+    }
   }
-
+  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW) 
+  {
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      leds[i] = CRGB(255, 255, 0);
+      FastLED.show();
+    }
+  }
   delay(2000);
 }

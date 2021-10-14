@@ -11,9 +11,9 @@ char* RED = "RED";
 #define trigPin   0
 
 // led
-#define LED_PIN_1 2
-#define LED_PIN_2 3
-#define LED_PIN_3 4
+#define LED_PIN 4
+#define NUM_LEDS 20
+#define BRIGHTNESS 20
 
 // dht22
 #define DHTPIN    1
