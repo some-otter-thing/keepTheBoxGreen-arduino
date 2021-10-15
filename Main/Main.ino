@@ -41,7 +41,6 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 void setup() {
   Serial.begin(9600);
 
-  setupDisplay();
 
   while (!Serial);
 
@@ -64,6 +63,10 @@ void setup() {
   // LEDs
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
+
+  // display
+  setupDisplay();
+
 }
 void loop() {
   unsigned long currentTime =
