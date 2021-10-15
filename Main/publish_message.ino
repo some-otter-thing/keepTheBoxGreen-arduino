@@ -19,3 +19,4 @@ void publishMessage()
   mqttClient.beginMessage("devices/" + deviceId + "/messages/events/", static_cast<unsigned long>(payloadSize));
   mqttClient.print(payload);
   mqttClient.endMessage();
+}

@@ -22,3 +22,18 @@ touch arduino_secrets.h
 * Explanation of necessary drivers for the Arduino MKR1000 series of boards - <a href="https://www.arduino.cc/en/Guide/MKR1000">link</a>
 
 * Helper to make json https://arduinojson.org/v6/assistant/
+### Used libraries:
+1. Wifi:
+    * WiFiNINA library
+2. MQTT connection:
+    * ArduinoMqttClient
+    * ArduinoBearSSL
+    * ArduinoECCX08
+    * ArduinoJson
+3. TFT Display
+    * Adafruit_GFX
+    * Adafruit_ST7735 & ST7798
+4. DHT22
+    * Adafruit DHT sensor library
+5. LED
+    * FastLED
