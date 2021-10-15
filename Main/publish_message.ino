@@ -1,7 +1,9 @@
 void publishMessage()
 {
   Serial.println("Publishing message");
-
+  const int capacity = JSON_ARRAY_SIZE(10) + 10*JSON_OBJECT_SIZE(2)+ JSON_OBJECT_SIZE(3) + 280;     // TODO: calculation of the JSON doc size should be redone
+  StaticJsonDocument<capacity> doc;
+  serializeJson(doc, Serial);
   doc["connectionDeviceId"] = "keep-the-box-green-device";
   doc["connectionDeviceGenerationId"] = "637669621042053570";
   doc["eventTimestamp"] = "637669621042053570";
