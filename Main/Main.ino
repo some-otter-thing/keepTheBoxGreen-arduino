@@ -42,29 +42,29 @@ void setup() {
   Serial.begin(9600);
 
   // display
-  tft.initR(INITR_BLACKTAB);     // initialize a ST7735S chip, black tab
-  tft.fillScreen(ST7735_BLACK);  // fill screen with black color
-  tft.drawFastHLine(0, 30,  tft.width(), ST7735_WHITE);   // draw horizontal white line at position (0, 30)
-  tft.setTextColor(ST7735_WHITE, ST7735_BLACK);  // set text color to white and black background
-  tft.setTextSize(1);                 // text size = 1
-  tft.setCursor(120, 0);               // move cursor to position (4, 0) pixel
-  tft.print("@");
-  tft.drawFastHLine(0, 7,  tft.width(), ST7735_WHITE);
-  tft.setCursor(0, 15);              // move cursor to position (19, 15) pixel
-  tft.print("okja is cute dog");
-  tft.drawFastHLine(0, 76,  tft.width(), ST7735_WHITE);  // draw horizontal white line at position (0, 76)
-  tft.drawFastHLine(0, 122,  tft.width(), ST7735_WHITE);  // draw horizontal white line at position (0, 122)
-  tft.setTextColor(ST7735_RED, ST7735_BLACK);     // set text color to red and black background
-  tft.setCursor(25, 39);              // move cursor to position (25, 39) pixel
-  tft.print("TEMPERATURE =");
-  tft.setTextColor(ST7735_CYAN, ST7735_BLACK);  // set text color to cyan and black background
-  tft.setCursor(34, 85);              // move cursor to position (34, 85) pixel
-  tft.print("HUMIDITY =");
-  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);  // set text color to green and black background
-  tft.setCursor(34, 131);              // move cursor to position (34, 131) pixel
-  tft.print("PRESSURE =");
-  tft.setTextSize(2);                 // text size = 2
-
+  //  tft.initR(INITR_BLACKTAB);     // initialize a ST7735S chip, black tab
+  //  tft.fillScreen(ST7735_BLACK);  // fill screen with black color
+  //  tft.drawFastHLine(0, 30,  tft.width(), ST7735_WHITE);   // draw horizontal white line at position (0, 30)
+  //  tft.setTextColor(ST7735_WHITE, ST7735_BLACK);  // set text color to white and black background
+  //  tft.setTextSize(1);                 // text size = 1
+  //  tft.setCursor(120, 0);               // move cursor to position (4, 0) pixel
+  //  tft.print("@");
+  //  tft.drawFastHLine(0, 7,  tft.width(), ST7735_WHITE);
+  //  tft.setCursor(0, 15);              // move cursor to position (19, 15) pixel
+  //  tft.print("okja is cute dog");
+  //  tft.drawFastHLine(0, 76,  tft.width(), ST7735_WHITE);  // draw horizontal white line at position (0, 76)
+  //  tft.drawFastHLine(0, 122,  tft.width(), ST7735_WHITE);  // draw horizontal white line at position (0, 122)
+  //  tft.setTextColor(ST7735_RED, ST7735_BLACK);     // set text color to red and black background
+  //  tft.setCursor(25, 39);              // move cursor to position (25, 39) pixel
+  //  tft.print("TEMPERATURE =");
+  //  tft.setTextColor(ST7735_CYAN, ST7735_BLACK);  // set text color to cyan and black background
+  //  tft.setCursor(34, 85);              // move cursor to position (34, 85) pixel
+  //  tft.print("HUMIDITY =");
+  //  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);  // set text color to green and black background
+  //  tft.setCursor(34, 131);              // move cursor to position (34, 131) pixel
+  //  tft.print("PRESSURE =");
+  //  tft.setTextSize(2);                 // text size = 2
+  setupDisplay();
 
 
   while (!Serial);
@@ -91,7 +91,7 @@ void setup() {
 }
 void loop() {
   unsigned long currentTime =
-      millis();                 // set up current time to arduino running time
+    millis();                 // set up current time to arduino running time
   unsigned long lastMillis = 0; // used for mqtt connection
   if (WiFi.status() != WL_CONNECTED) {
     connectWiFi();
@@ -109,9 +109,9 @@ void loop() {
   digitalWrite(trigPin, LOW);
 
   duration = pulseIn(
-      echoPin, HIGH); // returns the sound wave travel time in microseconds
+               echoPin, HIGH); // returns the sound wave travel time in microseconds
   distance =
-      duration * 0.034 / 2; // speed of sound wave divided by 2 (go and back)
+    duration * 0.034 / 2; // speed of sound wave divided by 2 (go and back)
 
   temp = dht.readTemperature();
   hum = dht.readHumidity();
@@ -120,20 +120,20 @@ void loop() {
   humColor = getHumColor(hum);
   timeSitting = getSittingTime(distance, currentTime);
   // publish a message every 10 seconds.
-//  if (millis() - lastMillis > 10000) {
-//    lastMillis = millis();
-//    publishMessage();
-//  }
+  //  if (millis() - lastMillis > 10000) {
+  //    lastMillis = millis();
+  //    publishMessage();
+  //  }
 
-  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) 
+  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
       leds[i] = CRGB(0, 255, 0);
       FastLED.show();
     }
-  } 
-  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED) 
+  }
+  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
@@ -141,7 +141,7 @@ void loop() {
       FastLED.show();
     }
   }
-  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW) 
+  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
