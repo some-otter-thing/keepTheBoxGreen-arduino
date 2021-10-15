@@ -105,10 +105,10 @@ void loop() {
   humColor = getHumColor(hum);
   timeSitting = getSittingTime(distance, currentTime);
   // publish a message every 10 seconds.
-  if (millis() - lastMillis > 10000) {
-    lastMillis = millis();
-    publishMessage();
-  }
+//  if (millis() - lastMillis > 10000) {
+//    lastMillis = millis();
+//    publishMessage();
+//  }
 
   if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) 
   {
