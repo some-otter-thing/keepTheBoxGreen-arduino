@@ -1,32 +1,49 @@
-//void testdrawtext(char *text, uint16_t color) {
-//  tft.setCursor(0, 0);
-//  tft.setTextColor(color);
-//  tft.setTextWrap(true);
-//  tft.print(text);
-//}
+void setupDisplay() {                                               // 128*160 matrix of pixel 
+  tft.initR(INITR_BLACKTAB);                                        // initialize a ST7735S chip, black tab
+  tft.fillScreen(ST7735_BLACK);                                     // fill screen with black color
 
+  // topbar
+  tft.setTextColor(ST7735_WHITE, ST7735_BLACK);                     // set text color to white and black background
+  tft.setTextSize(1);                                               // set text size to 1
+  tft.setCursor(85, 0);                                             // font starting coordinate of (x, y)  
+  tft.print("online!");
 
-void setupDisplay() {
-  tft.initR(INITR_BLACKTAB);     // initialize a ST7735S chip, black tab
-  tft.fillScreen(ST7735_BLACK);  // fill screen with black color
-  tft.drawFastHLine(0, 30,  tft.width(), ST7735_WHITE);   // draw horizontal white line at position (0, 30)
-  tft.setTextColor(ST7735_WHITE, ST7735_BLACK);  // set text color to white and black background
-  tft.setTextSize(1);                 // text size = 1
-  tft.setCursor(120, 0);               // move cursor to position (4, 0) pixel
-  tft.print("@");
-  tft.drawFastHLine(0, 7,  tft.width(), ST7735_WHITE);
-  tft.setCursor(0, 15);              // move cursor to position (19, 15) pixel
-  tft.print("some description");
-  tft.drawFastHLine(0, 76,  tft.width(), ST7735_WHITE);  // draw horizontal white line at position (0, 76)
-  tft.drawFastHLine(0, 122,  tft.width(), ST7735_WHITE);  // draw horizontal white line at position (0, 122)
-  tft.setTextColor(ST7735_RED, ST7735_BLACK);     // set text color to red and black background
-  tft.setCursor(25, 39);              // move cursor to position (25, 39) pixel
-  tft.print("TEMPERATURE =");
-  tft.setTextColor(ST7735_CYAN, ST7735_BLACK);  // set text color to cyan and black background
-  tft.setCursor(34, 85);              // move cursor to position (34, 85) pixel
-  tft.print("HUMIDITY =");
-  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);  // set text color to green and black background
-  tft.setCursor(34, 131);              // move cursor to position (34, 131) pixel
-  tft.print("PRESSURE =");
-  tft.setTextSize(2);                 // text size = 2
+  tft.drawFastHLine(0, 10,  tft.width(), ST7735_WHITE);             // draw horizontal white line at position (0, 30)
+
+  // text block
+  tft.setCursor(0, 17);
+  tft.print("temp static content");
+
+  tft.drawFastHLine(0, 30,  tft.width(), ST7735_WHITE);
+
+  // temp
+  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
+  tft.setCursor(0, 40);
+  tft.print("TEMPERATURE = 24C");
+
+  // hum
+  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
+  tft.setCursor(0, 55);
+  tft.print("HUMIDITY = 52%");
+
+  // dust 
+  tft.setTextColor(ST7735_RED, ST7735_BLACK);
+  tft.setCursor(0, 70);
+  tft.print("DUST LEVEL = BAD");
+
+  // desk time
+  tft.setTextColor(ST7735_RED, ST7735_BLACK);
+  tft.setCursor(0, 85);
+  tft.print("DESK TIME = 42:27");
+
+  tft.drawFastHLine(0, 100,  tft.width(), ST7735_WHITE);
+
+  // set text size of above 3 value
+  tft.setTextSize(2);
+
+  // set notification in half below
+  tft.setTextColor(ST7735_RED, ST7735_BLACK);
+  tft.setCursor(0, 115);
+  tft.print("TAKE A BREAK!! :(");
+  tft.setTextSize(3);
 }
