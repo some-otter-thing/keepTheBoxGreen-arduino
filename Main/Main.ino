@@ -9,6 +9,7 @@
 #include "arduino_secrets.h"
 #include "display_constants.h"
 #include "main_constants.h"
+#include "sitting_time_constants.h"
 #include <DHT.h>
 #include <FastLED.h>
 
@@ -102,12 +103,11 @@ void loop() {
   sittingTimeColor = getSittingTimeColor(distance, currentTime);
   tempColor = getTempColor(temp);
   humColor = getHumColor(hum);
-
-  // publish a message every 5 seconds.
-  if (millis() - lastMillis > 5000) {
+  timeSitting = getSittingTime(distance, currentTime);
+  // publish a message every 10 seconds.
+  if (millis() - lastMillis > 10000) {
     lastMillis = millis();
-    publishMessage(); // temp, hum, sittingTimeColor, dustConcentration will be
-                      // published here
+    publishMessage();
   }
 
   if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN) 

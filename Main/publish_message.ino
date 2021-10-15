@@ -6,10 +6,10 @@ void publishMessage()
   serializeJson(doc, Serial);
   doc["connectionDeviceId"] = "keep-the-box-green-device";
   doc["connectionDeviceGenerationId"] = "637669621042053570";
-  doc["eventTimestamp"] = "637669621042053570";
   doc["temperature"] = temp;
   doc["humidity"] = hum;
-  doc["dustConcentration"] = 64.8;
+  doc["dustConcentration"] = 64.8; // TODO: add real one
+  doc["sittingTime"] = timeSitting;
 
   // TODO: can be removed, it serializes the document in the serial monitor
   serializeJson(doc, Serial);
