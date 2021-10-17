@@ -33,6 +33,7 @@ touch arduino_secrets.h
 3. TFT Display
     * Adafruit_GFX
     * Adafruit_ST7735 & ST7798
+    * Adafruit BusIO 
 4. DHT22
     * Adafruit DHT sensor library
 5. LED
