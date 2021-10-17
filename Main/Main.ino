@@ -72,14 +72,14 @@ void loop() {
   unsigned long currentTime =
     millis();                 // set up current time to arduino running time
   unsigned long lastMillis = 0; // used for mqtt connection
-  if (WiFi.status() != WL_CONNECTED) {
-    connectWiFi();
-  }
-  if (!mqttClient.connected()) {
-    connectMQTT();
-  }
-  // poll for new MQTT messages and send keep alives
-  mqttClient.poll();
+//  if (WiFi.status() != WL_CONNECTED) {
+//    connectWiFi();
+//  }
+//  if (!mqttClient.connected()) {
+//    connectMQTT();
+//  }
+//  // poll for new MQTT messages and send keep alives
+//  mqttClient.poll();
 
   digitalWrite(trigPin, LOW);
   delay(1000);
