@@ -8,7 +8,7 @@ void connectMQTT()
   {
     Serial.print(".");
     Serial.println(mqttClient.connectError());
-    delay(5000);
+    delay(1000);
   }
   Serial.println();
 
