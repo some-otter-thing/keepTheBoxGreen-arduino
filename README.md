@@ -37,3 +37,14 @@ touch arduino_secrets.h
     * Adafruit DHT sensor library
 5. LED
     * FastLED
+
+### Used Hardwares:
+
+1. Arduino MKR 1010 Board 
+    * wireless communication
+2. DHT22 Sensor 
+    * temperature & humidity
+3. HC-SR04Ultrasonic Sensor 
+    * measuring motion& proximity
+4. Generic LED Strip 
+5. Generic 1.8" TFT Display
