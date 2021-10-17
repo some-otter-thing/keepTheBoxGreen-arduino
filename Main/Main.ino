@@ -84,9 +84,9 @@ void loop() {
   //  mqttClient.poll();
 
   digitalWrite(trigPin, LOW);
-  delay(1000);
+//  delay(1000);
   digitalWrite(trigPin, HIGH);
-  delay(1000);
+//  delay(1000);
   digitalWrite(trigPin, LOW);
 
   duration = pulseIn(
@@ -139,5 +139,5 @@ void loop() {
 
   displayValue();
 
-  delay(2000);
+//  delay(1000);
 }

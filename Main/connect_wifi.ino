@@ -7,7 +7,7 @@ void connectWiFi()
   while (WiFi.begin(ssid, pass) != WL_CONNECTED)
   {
     Serial.print(".");
-    delay(1000);
+    delay(5000);
   }
   Serial.println();
 

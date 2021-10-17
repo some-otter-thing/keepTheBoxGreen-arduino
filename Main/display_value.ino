@@ -38,16 +38,11 @@ void displayValue() {
   tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
   tft.setCursor(0, 85);
   tft.print("Desk Time   = ");
-  tft.print(timeSitting / 1000); // ms to s
-  tft.print("s");
+  tft.print(timeSitting / 1000);
 
   // set notification in half below
-  if (!(sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)) {
-    getNotification();
-  }
+  getNotification();
 }
-
-
 
 char* onlineStatus() {
   if (WiFi.status() == WL_CONNECTED) {
