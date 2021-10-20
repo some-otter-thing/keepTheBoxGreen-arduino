@@ -84,9 +84,9 @@ void loop() {
   //  mqttClient.poll();
 
   digitalWrite(trigPin, LOW);
-//  delay(1000);
+  delay(500);
   digitalWrite(trigPin, HIGH);
-//  delay(1000);
+  delay(500);
   digitalWrite(trigPin, LOW);
 
   duration = pulseIn(
@@ -133,10 +133,6 @@ void loop() {
   }
 
   // display
-  // topbar wifi status
-  Serial.print(onlineStatus());
-  Serial.println();
-
   displayValue();
 
 //  delay(1000);
