@@ -44,6 +44,8 @@ touch arduino_secrets.h
 5. Generic 1.8" TFT Display
 6. Nova PM SDS011 PM 2.5 sensor
 
+![Fritzing breadboard hardware planning](https://i.imgur.com/iirBkXY.png)
+
 ### Used libraries:
 
 1. Wifi:
