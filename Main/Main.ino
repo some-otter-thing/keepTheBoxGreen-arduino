@@ -140,23 +140,8 @@ void loop() {
     }
   }
 
-  // dust sensor
-  // PmResult pm = sds.readPm();
-  // if (pm.isOk()) {
-  //   Serial.print("PM2.5 = ");
-  //   Serial.print(pm.pm25);
-  //   Serial.print(", PM10 = ");
-  //   Serial.println(pm.pm10);
-
-  //   // if you want to just print the measured values, you can use toString() method as well
-  //   Serial.println(pm.toString());
-  // } else {
-  //   Serial.print("Could not read values from sensor, reason: ");
-  //   Serial.println(pm.statusToString());
-  // }
-
   // display
   displayValue();
 
-//  delay(1000);
+  // delay(1000);
 }
