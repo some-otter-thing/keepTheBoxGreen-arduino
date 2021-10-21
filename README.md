@@ -42,6 +42,7 @@ touch arduino_secrets.h
    - measuring motion& proximity
 4. Generic LED Strip
 5. Generic 1.8" TFT Display
+6. Nova PM SDS011 PM 2.5 sensor
 
 ### Used libraries:
 
@@ -62,3 +63,5 @@ touch arduino_secrets.h
    - Adafruit DHT sensor library
 5. LED
    - FastLED
+6. Dust Sensor
+   - Nova_SDS011 Sensor library
