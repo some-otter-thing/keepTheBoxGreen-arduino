@@ -19,6 +19,9 @@
 #include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
 #include <SPI.h>
 
+// dust sensor
+#include "SdsDustSensor.h"
+
 // wifi
 WiFiClient wifiClient;               // Used for the TCP socket connection
 BearSSLClient sslClient(wifiClient); // Used for SSL/TLS connection
@@ -37,6 +40,9 @@ DHT dht(DHTPIN, DHTTYPE);
 CRGB leds[NUM_LEDS];
 // interfacing display lib pins
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
+// dust sensor
+SdsDustSensor sds(Serial1);
 
 void setup() {
   Serial.begin(9600);
@@ -67,6 +73,11 @@ void setup() {
   // display
   setupDisplay();
 
+  // dust sensor
+  sds.begin();
+  Serial.println(sds.queryFirmwareVersion().toString()); 
+  Serial.println(sds.setActiveReportingMode().toString()); 
+  Serial.println(sds.setContinuousWorkingPeriod().toString()); 
 }
 
 void loop() {
@@ -130,6 +141,21 @@ void loop() {
       leds[i] = CRGB(255, 255, 0);
       FastLED.show();
     }
+  }
+
+  // dust sensor
+  PmResult pm = sds.readPm();
+  if (pm.isOk()) {
+    Serial.print("PM2.5 = ");
+    Serial.print(pm.pm25);
+    Serial.print(", PM10 = ");
+    Serial.println(pm.pm10);
+
+    // if you want to just print the measured values, you can use toString() method as well
+    Serial.println(pm.toString());
+  } else {
+    Serial.print("Could not read values from sensor, reason: ");
+    Serial.println(pm.statusToString());
   }
 
   // display
