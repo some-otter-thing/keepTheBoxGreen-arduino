@@ -35,11 +35,8 @@ touch arduino_secrets.h
 ### Used Hardwares:
 
 1. Arduino MKR 1010 Board
-   - wireless communication
 2. DHT22 Sensor
-   - temperature & humidity
-3. HC-SR04Ultrasonic Sensor
-   - measuring motion& proximity
+3. HC-SR0 4Ultrasonic Sensor
 4. Generic LED Strip
 5. Generic 1.8" TFT Display
 6. Nova PM SDS011 PM 2.5 sensor
