@@ -64,4 +64,4 @@ touch arduino_secrets.h
 5. LED
    - FastLED
 6. Dust Sensor
-   - Nova_SDS011 Sensor library
+   - Nova Fitness SDS dust sensors library
