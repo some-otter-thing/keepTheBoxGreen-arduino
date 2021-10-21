@@ -32,7 +32,17 @@ void displayValue() {
   tft.setTextColor(ST7735_YELLOW, ST7735_BLACK);
   tft.setCursor(0, 70);
   tft.print("Dust Level : ");
+  PmResult pm = sds.readPm();
+  if (pm.isOk()) {
+    tft.print(pm.pm25);
+  } else {
+    tft.print("N/A");
+  }
+  
+
+
   tft.print("N/A");
+
 
   // desk time
   tft.setTextColor(ST7735_GREEN, ST7735_BLACK);

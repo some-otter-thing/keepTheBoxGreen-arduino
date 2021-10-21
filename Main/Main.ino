@@ -74,10 +74,7 @@ void setup() {
   setupDisplay();
 
   // dust sensor
-  sds.begin();
-  Serial.println(sds.queryFirmwareVersion().toString()); 
-  Serial.println(sds.setActiveReportingMode().toString()); 
-  Serial.println(sds.setContinuousWorkingPeriod().toString()); 
+  setupDust();
 }
 
 void loop() {
@@ -144,19 +141,19 @@ void loop() {
   }
 
   // dust sensor
-  PmResult pm = sds.readPm();
-  if (pm.isOk()) {
-    Serial.print("PM2.5 = ");
-    Serial.print(pm.pm25);
-    Serial.print(", PM10 = ");
-    Serial.println(pm.pm10);
+  // PmResult pm = sds.readPm();
+  // if (pm.isOk()) {
+  //   Serial.print("PM2.5 = ");
+  //   Serial.print(pm.pm25);
+  //   Serial.print(", PM10 = ");
+  //   Serial.println(pm.pm10);
 
-    // if you want to just print the measured values, you can use toString() method as well
-    Serial.println(pm.toString());
-  } else {
-    Serial.print("Could not read values from sensor, reason: ");
-    Serial.println(pm.statusToString());
-  }
+  //   // if you want to just print the measured values, you can use toString() method as well
+  //   Serial.println(pm.toString());
+  // } else {
+  //   Serial.print("Could not read values from sensor, reason: ");
+  //   Serial.println(pm.statusToString());
+  // }
 
   // display
   displayValue();
