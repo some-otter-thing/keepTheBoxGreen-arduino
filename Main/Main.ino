@@ -90,7 +90,7 @@ void loop() {
   //  }
   //  // poll for new MQTT messages and send keep alives
   //  mqttClient.poll();
-
+  
   digitalWrite(trigPin, LOW);
   delay(500);
   digitalWrite(trigPin, HIGH);
@@ -104,10 +104,15 @@ void loop() {
 
   temp = dht.readTemperature();
   hum = dht.readHumidity();
+  PmResult pm = sds.readPm();
+  dust = pm.pm25;
+ 
   sittingTimeColor = getSittingTimeColor(distance, currentTime);
   tempColor = getTempColor(temp);
   humColor = getHumColor(hum);
+  dustColor = getDustColor(dust);
   timeSitting = getSittingTime(distance, currentTime);
+
 
   // publish a message every 10 seconds.
   //  if (millis() - lastMillis > 10000) {
@@ -115,7 +120,7 @@ void loop() {
   //    publishMessage();
   //  }
 
-  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN)
+  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN && dustColor == GREEN)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
@@ -123,7 +128,7 @@ void loop() {
       FastLED.show();
     }
   }
-  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED)
+  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED || dustColor == RED)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
@@ -131,7 +136,7 @@ void loop() {
       FastLED.show();
     }
   }
-  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW)
+  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW || dustColor == YELLOW)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
