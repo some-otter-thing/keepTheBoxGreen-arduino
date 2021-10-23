@@ -1,6 +1,7 @@
 char* sittingTimeColor = "GREEN";
 char* tempColor = "GREEN";
 char* humColor = "GREEN";
+char* dustColor = "GREEN";
 
 char* GREEN = "GREEN";
 char* YELLOW = "YELLOW";
@@ -30,3 +31,4 @@ long duration;
 int distance;
 float hum;
 float temp;
+float dust;
