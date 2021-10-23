@@ -15,32 +15,32 @@ void displayValue() {
   tft.setTextSize(1);
 
   // temp
-  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
+  setTextColor(tempColor);
   tft.setCursor(0, 40);
   tft.print("Temperature: ");
   tft.print(temp);
   tft.print("C");
 
   // hum
-  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
+  setTextColor(humColor);
   tft.setCursor(0, 55);
   tft.print("Humidity   : ");
   tft.print(hum);
   tft.print("%");
 
   // dust
-  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
+  setTextColor(dustColor);
   tft.setCursor(0, 70);
   tft.print("Dust Level : ");
   PmResult pm = sds.readPm();
   if (pm.isOk()) {
-    tft.print(pm.pm25);
+    tft.print(dust);
   } else {
     tft.print("N/A    ");
   }
 
   // desk time
-  tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
+  setTextColor(sittingTimeColor);
   tft.setCursor(0, 85);
   tft.print("Desk Time  : ");
   // tft.print(timeSitting / 1000);
