@@ -42,7 +42,7 @@ touch arduino_secrets.h
 6. Nova PM SDS011 PM 2.5 sensor
 
 ![Fritzing breadboard hardware planning](https://i.imgur.com/iirBkXY.png)
-
+![Fritzing schematics planning](https://i.imgur.com/qySSMSN.png)
 ### Used libraries:
 
 1. Wifi:
