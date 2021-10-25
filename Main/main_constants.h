@@ -1,6 +1,7 @@
 char* sittingTimeColor = "GREEN";
 char* tempColor = "GREEN";
 char* humColor = "GREEN";
+char* dustColor = "GREEN";
 
 char* GREEN = "GREEN";
 char* YELLOW = "YELLOW";
@@ -12,8 +13,8 @@ char* RED = "RED";
 
 // led
 #define LED_PIN 4
-#define NUM_LEDS 20
-#define BRIGHTNESS 20
+#define NUM_LEDS 100
+#define BRIGHTNESS 50
 
 // dht22
 #define DHTPIN    1
@@ -30,3 +31,4 @@ long duration;
 int distance;
 float hum;
 float temp;
+float dust;

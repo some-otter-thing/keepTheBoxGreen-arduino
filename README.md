@@ -35,14 +35,14 @@ touch arduino_secrets.h
 ### Used Hardwares:
 
 1. Arduino MKR 1010 Board
-   - wireless communication
 2. DHT22 Sensor
-   - temperature & humidity
-3. HC-SR04Ultrasonic Sensor
-   - measuring motion& proximity
+3. HC-SR0 4Ultrasonic Sensor
 4. Generic LED Strip
 5. Generic 1.8" TFT Display
+6. Nova PM SDS011 PM 2.5 sensor
 
+![Fritzing breadboard hardware planning](https://i.imgur.com/iirBkXY.png)
+![Fritzing schematics planning](https://i.imgur.com/qySSMSN.png)
 ### Used libraries:
 
 1. Wifi:
@@ -53,9 +53,14 @@ touch arduino_secrets.h
    - ArduinoECCX08
    - ArduinoJson
 3. TFT Display
+    * Adafruit_GFX
+    * Adafruit_ST7735 & ST7798
+    * Adafruit BusIO 
    - Adafruit_GFX
    - Adafruit_ST7735 & ST7798
 4. DHT22
    - Adafruit DHT sensor library
 5. LED
    - FastLED
+6. Dust Sensor
+   - Nova Fitness SDS dust sensors library
