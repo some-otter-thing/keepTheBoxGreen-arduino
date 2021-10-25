@@ -13,8 +13,8 @@ char* RED = "RED";
 
 // led
 #define LED_PIN 4
-#define NUM_LEDS 20
-#define BRIGHTNESS 20
+#define NUM_LEDS 100
+#define BRIGHTNESS 50
 
 // dht22
 #define DHTPIN    1
