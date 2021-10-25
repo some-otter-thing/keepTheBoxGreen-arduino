@@ -82,15 +82,15 @@ void loop() {
     millis();                 // set up current time to arduino running time
   unsigned long lastMillis = 0; // used for mqtt connection
 
-  //  if (WiFi.status() != WL_CONNECTED) {
-  //    connectWiFi();
-  //  }
-  //  if (!mqttClient.connected()) {
-  //    connectMQTT();
-  //  }
-  //  // poll for new MQTT messages and send keep alives
-  //  mqttClient.poll();
-  
+  if (WiFi.status() != WL_CONNECTED) {
+    connectWiFi();
+  }
+  if (!mqttClient.connected()) {
+    connectMQTT();
+  }
+  // poll for new MQTT messages and send keep alives
+  mqttClient.poll();
+
   digitalWrite(trigPin, LOW);
   delay(500);
   digitalWrite(trigPin, HIGH);
@@ -106,7 +106,7 @@ void loop() {
   hum = dht.readHumidity();
   PmResult pm = sds.readPm();
   dust = pm.pm25;
- 
+
   sittingTimeColor = getSittingTimeColor(distance, currentTime);
   tempColor = getTempColor(temp);
   humColor = getHumColor(hum);
@@ -115,10 +115,10 @@ void loop() {
 
 
   // publish a message every 10 seconds.
-  //  if (millis() - lastMillis > 10000) {
-  //    lastMillis = millis();
-  //    publishMessage();
-  //  }
+  if (millis() - lastMillis > 10000) {
+    lastMillis = millis();
+    publishMessage();
+  }
 
   if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN && dustColor == GREEN)
   {
