@@ -4,17 +4,13 @@ void connectMQTT()
   Serial.print(broker);
   Serial.println(" ");
 
-  while (!mqttClient.connect(broker, 8883))
+  while (!mqttClient.connect(broker, 8883) && mqttRetries < MAX_MQTT_RETRIES)
   {
     Serial.print(".");
     Serial.println(mqttClient.connectError());
-    delay(5000);
+    mqttRetries ++;
+    delay(2000);
   }
-  Serial.println();
-
-  Serial.println("You're connected to the MQTT broker");
-  Serial.println();
-
   // subscribe to a topic
   mqttClient.subscribe("devices/" + deviceId + "/messages/devicebound/#");
 }

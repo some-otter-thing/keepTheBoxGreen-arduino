@@ -36,3 +36,4 @@ float dust;
 // wifi
 
 #define MAX_WIFI_RETRIES 2
+#define MAX_MQTT_RETRIES 2

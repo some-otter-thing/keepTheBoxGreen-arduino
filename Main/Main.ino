@@ -34,6 +34,7 @@ String deviceId = SECRET_DEVICE_ID;
 
 int status = WL_IDLE_STATUS;
 int wifiRetries = 0;
+int mqttRetries = 0;
 unsigned long timeWIFISetUpAttempt;
 // interfacing hum/temp sensor pins
 DHT dht(DHTPIN, DHTTYPE);
@@ -92,6 +93,7 @@ void loop() {
     connectWiFi();
     timeWIFISetUpAttempt =   millis();
   }
+  // TODO: Implement same retry logic as for wifi 
   if (!mqttClient.connected() && WiFi.status() == WL_CONNECTED) {
     connectMQTT();
     // poll for new MQTT messages and send keep alives
