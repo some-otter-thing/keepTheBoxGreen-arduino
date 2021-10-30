@@ -12,10 +12,9 @@ The main goal is to build an Arduino device, which is going to collect data from
 
 This repo consists of code for Arduino MKR1010 board.
 
-API implementation repo: [API](https://github.com/some-otter-thing/keepTheBoxGreen-api) 
-WEB implementation repo: [WEB](https://github.com/some-otter-thing/keepTheBoxGreen-fe) 
+API implementation repo: [link to api repo](https://github.com/some-otter-thing/keepTheBoxGreen-api) 
 
-WEB implemenatation repo:
+WEB implementation repo: [link to web repo](https://github.com/some-otter-thing/keepTheBoxGreen-fe) 
 
 ### Data Flow
 The board uses Azure cloud provider for publishing and storing data.
