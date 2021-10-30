@@ -38,23 +38,23 @@ touch arduino_secrets.h
 ```
 3. You need to have following libraries installed:
 
-1. Wifi:
-   - WiFiNINA library
-2. MQTT connection:
-   - ArduinoMqttClient
-   - ArduinoBearSSL
-   - ArduinoECCX08
-   - ArduinoJson
-3. TFT Display
-   - Adafruit BusIO 
-   - Adafruit_GFX
-   - Adafruit_ST7735 & ST7798
-4. DHT22
-   - Adafruit DHT sensor library
-5. LED
-   - FastLED
-6. Dust Sensor
-   - Nova Fitness SDS dust sensors library
+   1. Wifi:
+      - WiFiNINA library
+   2. MQTT connection:
+      - ArduinoMqttClient
+      - ArduinoBearSSL
+      - ArduinoECCX08
+      - ArduinoJson
+   3. TFT Display
+      - Adafruit BusIO 
+      - Adafruit_GFX
+      - Adafruit_ST7735 & ST7798
+   4. DHT22
+      - Adafruit DHT sensor library
+   5. LED
+      - FastLED
+   6. Dust Sensor
+      - Nova Fitness SDS dust sensors library
 ### Guides:
 
 - Connecting to wifi - <a href="https://www.arduino.cc/en/Guide/MKRWiFi1010/connecting-to-wifi-network">link</a>
