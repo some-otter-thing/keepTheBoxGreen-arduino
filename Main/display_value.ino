@@ -10,7 +10,12 @@ void displayValue() {
   tft.setTextSize(1);
   tft.setCursor(0, 17);
   tft.setTextColor(ST7735_WHITE, ST7735_BLACK);
-  tft.print("only works if online");
+  if (WiFi.status() == WL_CONNECTED) {
+    tft.print("WIFI ");
+    tft.print(ssid);
+  } else {
+    tft.print("WIFI is disconnected ");
+  }
 
   tft.setTextSize(1);
 

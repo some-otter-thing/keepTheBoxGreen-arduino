@@ -32,3 +32,7 @@ int distance;
 float hum;
 float temp;
 float dust;
+
+// wifi
+
+#define MAX_WIFI_RETRIES 2

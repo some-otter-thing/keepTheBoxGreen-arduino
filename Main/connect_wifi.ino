@@ -4,13 +4,11 @@ void connectWiFi()
   Serial.print(ssid);
   Serial.print(" ");
 
-  while (WiFi.begin(ssid, pass) != WL_CONNECTED)
+  while (WiFi.begin(ssid, pass) != WL_CONNECTED && wifiRetries < MAX_WIFI_RETRIES)
   {
+    wifiRetries ++;
+    timeWIFISetUpAttempt =   millis(); // used to check wifi connection
     Serial.print(".");
-    delay(5000);
+    delay(2000);
   }
-  Serial.println();
-
-  Serial.println("You're connected to the network");
-  Serial.println();
 }

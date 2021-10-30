@@ -33,7 +33,8 @@ const char broker[] = SECRET_BROKER;
 String deviceId = SECRET_DEVICE_ID;
 
 int status = WL_IDLE_STATUS;
-
+int wifiRetries = 0;
+unsigned long timeWIFISetUpAttempt;
 // interfacing hum/temp sensor pins
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -49,14 +50,20 @@ void setup() {
 
 
   while (!Serial);
+  // display
+  setupDisplay();
 
-  // wifi
-  while (status != WL_CONNECTED) {
+  // wifi connect try for MAX_WIFI_RETRIES times
+  while (status != WL_CONNECTED && (wifiRetries < MAX_WIFI_RETRIES)) {
     setupWIFI();
+    displayWIFIAttempts();
+    timeWIFISetUpAttempt = millis(); // used to check wifi connection
   }
-  Serial.println("You're connected to the network");
-  printWiFiData(); // will be deleted
-
+  if (status == WL_CONNECTED) {
+    Serial.println("You're connected to the network");
+    printWiFiData();
+    wifiRetries = 0;
+  }
   // mqtt
   setupMQTT();
 
@@ -70,9 +77,6 @@ void setup() {
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
 
-  // display
-  setupDisplay();
-
   // dust sensor
   setupDust();
 }
@@ -82,14 +86,17 @@ void loop() {
     millis();                 // set up current time to arduino running time
   unsigned long lastMillis = 0; // used for mqtt connection
 
-  if (WiFi.status() != WL_CONNECTED) {
+
+  if (WiFi.status() != WL_CONNECTED && (millis() - timeWIFISetUpAttempt) > 10000) {
+    wifiRetries = 0;
     connectWiFi();
+    timeWIFISetUpAttempt =   millis();
   }
-  if (!mqttClient.connected()) {
+  if (!mqttClient.connected() && WiFi.status() == WL_CONNECTED) {
     connectMQTT();
+    // poll for new MQTT messages and send keep alives
+    mqttClient.poll();
   }
-  // poll for new MQTT messages and send keep alives
-  mqttClient.poll();
 
   digitalWrite(trigPin, LOW);
   delay(500);
