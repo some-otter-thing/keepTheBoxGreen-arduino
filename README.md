@@ -1,8 +1,27 @@
-### KeepTheBoxGreen device implementation
+### Table of contents
 
-The board uses Azure cloud IOT hub for storing messages.
+- [Project Description](#project-description)
+- [Data Flow](#data-flow)
+- [Local Installation](#local-installation)
+- [Schematics & blueprint](#schematics-and-blueprint)
+- [Hardware Components](#hardware-components)
 
-### For local development:
+### Project Description
+
+The main goal is to build an Arduino device, which is going to collect data from different sensors. It has simple logic behind which helps to indicate if any working conditions are violated by changing the colour of a box #keepTheBoxGreen. For example when a person is sitting in front of the laptop for more than 1 hour or air quality has dropped too much, the light of the box will change its colour to red and LCD display will print an appropriate advice. 
+
+This repo consists of code for Arduino MKR1010 board.
+
+API implementation repo: [API](https://github.com/some-otter-thing/keepTheBoxGreen-api) 
+WEB implementation repo: [WEB](https://github.com/some-otter-thing/keepTheBoxGreen-fe) 
+
+WEB implemenatation repo:
+
+### Data Flow
+The board uses Azure cloud provider for publishing and storing data.
+
+![data-flow](./assets/data_flow.png)
+### Local Installation:
 
 1. Create a header file within Main folder
 
@@ -18,7 +37,25 @@ touch arduino_secrets.h
 #define SECRET_BROKER    ""
 #define SECRET_DEVICE_ID ""
 ```
+3. You need to have following libraries installed:
 
+1. Wifi:
+   - WiFiNINA library
+2. MQTT connection:
+   - ArduinoMqttClient
+   - ArduinoBearSSL
+   - ArduinoECCX08
+   - ArduinoJson
+3. TFT Display
+   - Adafruit BusIO 
+   - Adafruit_GFX
+   - Adafruit_ST7735 & ST7798
+4. DHT22
+   - Adafruit DHT sensor library
+5. LED
+   - FastLED
+6. Dust Sensor
+   - Nova Fitness SDS dust sensors library
 ### Guides:
 
 - Connecting to wifi - <a href="https://www.arduino.cc/en/Guide/MKRWiFi1010/connecting-to-wifi-network">link</a>
@@ -27,12 +64,12 @@ touch arduino_secrets.h
 
 - Helper to make json https://arduinojson.org/v6/assistant/
 
-### Schematics & blueprint
+### Schematics and blueprint
 
-- Use [fritzing](https://fritzing.org/) to open the file in blueprint folder
+- Use [fritzing](https://fritzing.org/) to open the file in assets folder
 - Need to sign up if you don't want to pay for it..
 
-### Used Hardwares:
+### Hardware Components:
 
 1. Arduino MKR 1010 Board
 2. DHT22 Sensor
@@ -43,24 +80,4 @@ touch arduino_secrets.h
 
 ![Fritzing breadboard hardware planning](https://i.imgur.com/iirBkXY.png)
 ![Fritzing schematics planning](https://i.imgur.com/qySSMSN.png)
-### Used libraries:
 
-1. Wifi:
-   - WiFiNINA library
-2. MQTT connection:
-   - ArduinoMqttClient
-   - ArduinoBearSSL
-   - ArduinoECCX08
-   - ArduinoJson
-3. TFT Display
-    * Adafruit_GFX
-    * Adafruit_ST7735 & ST7798
-    * Adafruit BusIO 
-   - Adafruit_GFX
-   - Adafruit_ST7735 & ST7798
-4. DHT22
-   - Adafruit DHT sensor library
-5. LED
-   - FastLED
-6. Dust Sensor
-   - Nova Fitness SDS dust sensors library
