@@ -49,8 +49,6 @@ SdsDustSensor sds(Serial1);
 void setup() {
   Serial.begin(9600);
 
-
-  while (!Serial);
   // display
   setupDisplay();
 
