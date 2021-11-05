@@ -88,7 +88,7 @@ void loop() {
   unsigned long lastMillis = 0; // used for mqtt connection
 
 
-  if (WiFi.status() != WL_CONNECTED && (millis() - timeWIFISetUpAttempt) > 10000) {
+  if (WiFi.status() != WL_CONNECTED && (millis() - timeWIFISetUpAttempt) > 1800000) {
     wifiRetries = 0;
     connectWiFi();
     timeWIFISetUpAttempt =   millis();
