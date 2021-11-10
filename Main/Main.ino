@@ -78,6 +78,8 @@ void setup() {
 
   // dust sensor
   setupDust();
+  // humidifier
+  pinMode(Atomizer, OUTPUT); 
 }
 
 void loop() {
@@ -120,6 +122,14 @@ void loop() {
   dustColor = getDustColor(dust);
   timeSitting = getSittingTime(distance, currentTime);
 
+  if(hum < 50)
+  {
+    digitalWrite(Atomizer, HIGH);
+  }
+  else
+  {
+    digitalWrite(Atomizer, LOW);
+  }
 
   // publish a message every 10 seconds.
   if (millis() - lastMillis > 10000) {

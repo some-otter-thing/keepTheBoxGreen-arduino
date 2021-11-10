@@ -27,6 +27,9 @@ char* RED = "RED";
 #define TFT_SCLK 9
 #define TFT_MOSI 8
 
+// humidifier
+#define Atomizer 12 
+
 long duration;
 int distance;
 float hum;
