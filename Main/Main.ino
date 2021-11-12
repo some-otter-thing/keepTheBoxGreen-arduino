@@ -127,7 +127,7 @@ void loop() {
     publishMessage();
   }
 
-  if (sittingTimeColor == GREEN && tempColor == GREEN && humColor == GREEN && dustColor == GREEN)
+  if (sittingTimeColor == GREEN)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
@@ -135,7 +135,7 @@ void loop() {
       FastLED.show();
     }
   }
-  else if (sittingTimeColor == RED || tempColor == RED || humColor == RED || dustColor == RED)
+  else if (sittingTimeColor == RED)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
@@ -143,7 +143,7 @@ void loop() {
       FastLED.show();
     }
   }
-  else if (sittingTimeColor == YELLOW || tempColor == YELLOW || humColor == YELLOW || dustColor == YELLOW)
+  else if (sittingTimeColor == YELLOW)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
