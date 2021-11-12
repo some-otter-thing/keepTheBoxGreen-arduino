@@ -38,11 +38,12 @@ void displayValue() {
   tft.setCursor(0, 70);
   tft.print("Dust Level : ");
   PmResult pm = sds.readPm();
-  if (pm.isOk()) {
-    tft.print(dust);
-  } else {
-    tft.print("N/A    ");
-  }
+  // if (pm.isOk()) {
+  //   tft.print(dust);
+  // } else {
+  //   tft.print("N/A    ");
+  // }
+  tft.print(dustMessage);
 
   // desk time
   setTextColor(sittingTimeColor);

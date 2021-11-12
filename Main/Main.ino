@@ -118,8 +118,8 @@ void loop() {
   tempColor = getTempColor(temp);
   humColor = getHumColor(hum);
   dustColor = getDustColor(dust);
+  dustMessage = getDustMessage();
   timeSitting = getSittingTime(distance, currentTime);
-
 
   // publish a message every 10 seconds.
   if (millis() - lastMillis > 10000) {
