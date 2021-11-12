@@ -1,6 +1,6 @@
 void getNotification() {
-  tft.setTextSize(2);
-  tft.setCursor(0, 105);
+  tft.setTextSize(3);
+  tft.setCursor(0, 115);
   if (sittingTimeColor == GREEN) {
     tft.setTextColor(ST7735_GREEN, ST7735_BLACK);
     tft.print("Focus!             ");
@@ -9,6 +9,6 @@ void getNotification() {
     tft.print("Easy...    ");
   } else {
     tft.setTextColor(ST7735_RED, ST7735_BLACK);
-    tft.print("Take five!");
+    tft.print("Break!     ");
   }
 }
