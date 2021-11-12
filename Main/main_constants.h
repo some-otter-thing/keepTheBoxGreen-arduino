@@ -2,6 +2,7 @@ char* sittingTimeColor = "GREEN";
 char* tempColor = "GREEN";
 char* humColor = "GREEN";
 char* dustColor = "GREEN";
+char* dustMessage = "";
 
 char* GREEN = "GREEN";
 char* YELLOW = "YELLOW";
