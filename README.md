@@ -8,13 +8,20 @@
 
 ### Project Description
 
-The main goal is to build an Arduino device, which is going to collect data from different sensors. It has simple logic behind which helps to indicate if any working conditions are violated by changing the colour of a box #keepTheBoxGreen. For example when a person is sitting in front of the laptop for more than 1 hour or air quality has dropped too much, the light of the box will change its colour to red and LCD display will print an appropriate advice. 
+The main goal is to build an Arduino device, which is going to collect data from different sensors. It has simple logic behind which helps to indicate if any working conditions are violated by changing the colour of a box #keepTheBoxGreen. For example when a person is sitting in front of the laptop for more than 45 min, the light of the box will change its colour to red and LCD display will print an appropriate advice, in case if any sensors metrics will be out of the optimal numbers, LCD display will show that by changing color of the displayed data.
 
 This repo consists of code for Arduino MKR1010 board.
 
 API implementation repo: [link to api repo](https://github.com/some-otter-thing/keepTheBoxGreen-api) 
 
 WEB implementation repo: [link to web repo](https://github.com/some-otter-thing/keepTheBoxGreen-fe) 
+
+Prototypes:
+<div display="flex">
+  <img src="./assets/lcd.JPG" alt="lcd" width="200"/>
+  <img src="./assets/prototype.JPG" alt="prototype" width="300"/>
+  <img src="./assets/proto.gif" width="200" />
+</div>
 
 ### Data Flow
 The board uses Azure cloud provider for publishing and storing data.
